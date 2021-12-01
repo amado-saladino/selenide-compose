@@ -1,0 +1,25 @@
+version: '3'
+services:
+  report:
+    image: nginx:1.14
+    ports:
+      - "80:80"
+    volumes:
+      - testng-report:/usr/share/nginx/html
+  test:
+    image: amadosaladino/se
+    entrypoint: /app/entrypoint.sh
+    volumes:
+      - .:/app
+      - maven-repo:/root/.m2
+      - testng-report:/report
+  gallery:
+    image: ghcr.io/linuxserver/photoshow
+    ports:
+      - "81:80"
+    volumes:
+      - ./build/reports/tests:/Pictures:ro
+
+volumes:
+  maven-repo:
+  testng-report:
